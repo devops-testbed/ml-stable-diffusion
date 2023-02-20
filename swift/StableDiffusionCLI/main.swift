@@ -32,7 +32,7 @@ struct StableDiffusionSample: ParsableCommand {
             valueName: "directory-path"
         )
     )
-    var resourcePath: String = "./"
+    var resourcePath: String = "compiled"
     
     @Option(help: "Path to starting image.")
     var image: String? = nil
@@ -44,7 +44,7 @@ struct StableDiffusionSample: ParsableCommand {
     var imageCount: Int = 1
 
     @Option(help: "Number of diffusion steps to perform")
-    var stepCount: Int = 50
+    var stepCount: Int = 100
 
     @Option(
         help: ArgumentHelp(
@@ -199,8 +199,9 @@ struct StableDiffusionSample: ParsableCommand {
     }
 
     func imageName(_ sample: Int, step: Int? = nil) -> String {
-        let fileCharLimit = 75
+        let fileCharLimit = 175
         var name = prompt.prefix(fileCharLimit).replacingOccurrences(of: " ", with: "_")
+        var modelName = resourcePath.replacingOccurrences(of: "/", with: "_")
         if imageCount != 1 {
             name += ".\(sample)"
         }
@@ -214,7 +215,7 @@ struct StableDiffusionSample: ParsableCommand {
         if let step = step {
             name += ".\(step)"
         } else {
-            name += ".final"
+            name += ".\(modelName)"
         }
         name += ".png"
         return name
